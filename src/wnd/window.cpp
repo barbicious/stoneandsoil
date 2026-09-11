@@ -5,8 +5,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-namespace gfx {
-    Window::Window(const std::string_view &title, i32 width, i32 height) : width_{width}, height_{height} {
+namespace wnd {
+    Window::Window(const std::string_view &title, i32 width, i32 height) : keyboard_{this}, mouse_{this}, width_{width}, height_{height} {
         if (!glfwInit()) {
             const char* error_buffer;
             glfwGetError(&error_buffer);
@@ -47,10 +47,32 @@ namespace gfx {
 
             window->viewport();
         });
+
+        glfwSetCursorPosCallback(glfw_window_, [](GLFWwindow* wnd_handle, f64 x, f64 y) {
+            Window* window{static_cast<Window*>(glfwGetWindowUserPointer(wnd_handle))};
+
+            if (window->mouse_.first_) {
+                window->mouse_.x = static_cast<f32>(x);
+                window->mouse_.y = static_cast<f32>(y);
+                window->mouse_.first_ = false;
+            }
+
+            window->mouse_.delta_x = static_cast<f32>(x) - window->mouse_.x;
+            window->mouse_.delta_y = window->mouse_.y - static_cast<f32>(y);
+
+            window->mouse_.x = static_cast<f32>(x);
+            window->mouse_.y = static_cast<f32>(y);
+        });
+
+        glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     bool Window::isGood() {
+        mouse_.delta_x = mouse_.delta_y = 0;
+
         glfwPollEvents();
+
+        keyboard_.tick();
 
         return !glfwWindowShouldClose(glfw_window_);
     }
@@ -62,4 +84,4 @@ namespace gfx {
     void Window::viewport() const {
         glViewport(0, 0, width_, height_);
     }
-} // gfx
+} // wnd

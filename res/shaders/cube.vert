@@ -6,8 +6,9 @@ layout (location = 1) in vec2 i_uv;
 out vec2 v_uv;
 
 uniform mat4 u_proj;
+uniform mat4 u_view;
 
 void main() {
-    gl_Position = u_proj * vec4(i_pos, 1.0);
+    gl_Position = u_proj * u_view * vec4(i_pos, 1.0);
     v_uv = i_uv;
 }

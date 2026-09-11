@@ -7,18 +7,20 @@
 #include <stb/stb_image.h>
 
 #include "types.hpp"
+#include "ec/entity.hpp"
 #include "gfx/buffer.hpp"
 #include "gfx/image_texture.hpp"
 #include "gfx/screen.hpp"
 #include "gfx/shader.hpp"
 #include "gfx/vertex_array.hpp"
 #include "gfx/vertex_buffer.hpp"
-#include "gfx/window.hpp"
+#include "sos/player_component.hpp"
+#include "wnd/window.hpp"
 
 i32 main() {
     stbi_set_flip_vertically_on_load(true);
 
-    gfx::Window window{"stone and soil.", 1280, 720};
+    wnd::Window window{"stone and soil.", 1280, 720};
 
     gfx::Shader shader{gfx::Shader::Desc{
         .path = "res/shaders/cube.frag",
@@ -49,7 +51,19 @@ i32 main() {
 
     gfx::Screen screen{window};
 
+    ec::Entity player_entity{sos::PlayerComponent{window}};
+
+    f32 last_time{static_cast<f32>(glfwGetTime())};
+
     while (window.isGood()) {
+        if (window.keyboard().isKeyDown(GLFW_KEY_ESCAPE)) {
+            break;
+        }
+
+        f32 delta_time{static_cast<f32>(glfwGetTime()) - last_time};
+        player_entity.tick(delta_time);
+        last_time = static_cast<f32>(glfwGetTime());
+
         screen.bind();
 
         glClearColor(0.2f32, 0.25f32, 0.65f32, 1.0f32);
@@ -58,6 +72,7 @@ i32 main() {
         shader.bind();
 
         shader.setMat4("u_proj", proj);
+        shader.setMat4("u_view", player_entity.getComponent<sos::PlayerComponent>()->view());
 
         vao.bind();
         vbo.bind();

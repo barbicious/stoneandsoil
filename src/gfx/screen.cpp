@@ -1,9 +1,9 @@
 #include "screen.hpp"
 
-#include "window.hpp"
+#include "../wnd/window.hpp"
 
 namespace gfx {
-    Screen::Screen(Window &window) : window{window} {
+    Screen::Screen(const wnd::Window &window) : window{window} {
         vertex_array_.attribute<f32>(vertex_buffer_, 0, 2, GL_FLOAT, 4, 0);
         vertex_array_.attribute<f32>(vertex_buffer_, 1, 2, GL_FLOAT, 4, 2);
     }

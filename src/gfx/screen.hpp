@@ -5,12 +5,14 @@
 #include "vertex_array.hpp"
 #include "vertex_buffer.hpp"
 
-namespace gfx {
+namespace wnd {
     class Window;
+} // wnd
 
+namespace gfx {
     class Screen : public IBindable {
     public:
-        Screen(Window &window);
+        explicit Screen(const wnd::Window &window);
         ~Screen() override = default;
 
         void bind() override;
@@ -19,7 +21,7 @@ namespace gfx {
     private:
         static constexpr u32 Width{256}, Height{144};
 
-        Window &window;
+        const wnd::Window &window;
 
         Shader shader_{Shader::Desc{
             .path = "res/shaders/screen.vert",
