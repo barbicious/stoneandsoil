@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace gfx {
     Shader::~Shader() {
@@ -14,6 +15,14 @@ namespace gfx {
 
     void Shader::unbind() {
         glUseProgram(0);
+    }
+
+    void Shader::setMat4(const std::string_view &name, const glm::mat4 &value) const {
+        glUniformMatrix4fv(glGetUniformLocation(id, name.data()), 1, false, glm::value_ptr(value));
+    }
+
+    void Shader::setI32(const std::string_view &name, i32 value) const {
+        glUniform1i(glGetUniformLocation(id, name.data()), value);
     }
 
     u32 Shader::compileShader(Desc desc) {

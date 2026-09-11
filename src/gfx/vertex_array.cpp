@@ -3,6 +3,7 @@
 namespace gfx {
     VertexArray::VertexArray() {
         glGenVertexArrays(1, &id);
+        VertexArray::bind();
     }
 
     VertexArray::~VertexArray() {

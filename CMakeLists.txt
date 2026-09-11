@@ -11,7 +11,13 @@ FetchContent_Declare(
         GIT_TAG master
 )
 
-FetchContent_MakeAvailable(glfw)
+FetchContent_Declare(
+        glm
+        GIT_REPOSITORY https://github.com/g-truc/glm
+        GIT_TAG master
+)
+
+FetchContent_MakeAvailable(glfw glm)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
         ${CMAKE_SOURCE_DIR}/src/*.cpp
@@ -30,4 +36,4 @@ add_custom_command(TARGET stoneandsoil POST_BUILD
 
 target_include_directories(stoneandsoil PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glad/include ${CMAKE_SOURCE_DIR}/vendor)
 
-target_link_libraries(stoneandsoil PRIVATE glfw)
+target_link_libraries(stoneandsoil PRIVATE glfw glm::glm)

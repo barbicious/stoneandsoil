@@ -13,8 +13,11 @@ namespace gfx {
         bool isGood();
         void splat();
 
-    private:
-        GLFWwindow* glfw_window;
+        void viewport() const;
 
+    private:
+        GLFWwindow* glfw_window_;
+
+        i32 width_, height_;
     };
 } // gfx

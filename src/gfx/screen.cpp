@@ -1,0 +1,27 @@
+#include "screen.hpp"
+
+#include "window.hpp"
+
+namespace gfx {
+    Screen::Screen(Window &window) : window{window} {
+        vertex_array_.attribute<f32>(vertex_buffer_, 0, 2, GL_FLOAT, 4, 0);
+        vertex_array_.attribute<f32>(vertex_buffer_, 1, 2, GL_FLOAT, 4, 2);
+    }
+
+    void Screen::bind() {
+        render_texture_.open();
+        glViewport(0, 0, Width, Height);
+    }
+
+    void Screen::unbind() {
+        render_texture_.close();
+
+        window.viewport();
+
+        shader_.bind();
+        vertex_array_.bind();
+        vertex_buffer_.bind();
+        render_texture_.bind();
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+} // gfx

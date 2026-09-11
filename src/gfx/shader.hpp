@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/fwd.hpp>
 
 #include "i_bindable.hpp"
 #include "../types.hpp"
@@ -30,12 +31,17 @@ namespace gfx {
                 glGetProgramInfoLog(id, error_buffer.size(), nullptr, error_buffer.data());
                 std::cerr << error_buffer.data() << std::endl;
             }
+
+            Shader::bind();
         }
 
         ~Shader() override;
 
         void bind() override;
         void unbind() override;
+
+        void setMat4(const std::string_view &name, const glm::mat4 &value) const;
+        void setI32(const std::string_view &name, i32 value) const;
 
     private:
         u32 id{};
