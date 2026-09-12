@@ -11,6 +11,6 @@ namespace gfx {
         void close() const;
 
     private:
-        u32 fbo_{};
+        u32 fbo_{}, rbo_{};
     };
 } // gfx

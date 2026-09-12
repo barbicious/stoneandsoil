@@ -20,6 +20,11 @@ namespace gfx {
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id(), 0);
 
+        glGenRenderbuffers(1, &rbo_);
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo_);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo_);
+
         close();
 
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -29,6 +34,7 @@ namespace gfx {
 
     RenderTexture::~RenderTexture() {
         glDeleteFramebuffers(1, &fbo_);
+        glDeleteRenderbuffers(1, &rbo_);
     }
 
     void RenderTexture::open() const {

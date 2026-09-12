@@ -32,12 +32,12 @@ namespace gfx {
         }};
         VertexArray vertex_array_{};
         VertexBuffer vertex_buffer_{GL_STATIC_DRAW, std::array{
-            -1.0f32, -1.0f32, 0.0f32, 0.0f32,
-            1.0f32, -1.0f32, 1.0f32, 0.0f32,
-            1.0f32, 1.0f32, 1.0f32, 1.0f32,
-            1.0f32, 1.0f32, 1.0f32, 1.0f32,
-            -1.0f32, 1.0f32, 0.0f32, 1.0f32,
-            -1.0f32, -1.0f32, 0.0f32, 0.0f32,
+            -1.0f, -1.0f, 0.0f, 0.0f,
+            1.0f, -1.0f, 1.0f, 0.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f,
         }};
         RenderTexture render_texture_{Width, Height};
     };

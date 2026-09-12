@@ -16,6 +16,9 @@ namespace gfx {
     void Screen::unbind() {
         render_texture_.close();
 
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         window.viewport();
 
         shader_.bind();

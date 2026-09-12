@@ -1,5 +1,3 @@
-#include "buffer.hpp"
-
 #include <glad/glad.h>
 
 namespace gfx {

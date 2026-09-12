@@ -15,6 +15,8 @@
 #include "gfx/vertex_array.hpp"
 #include "gfx/vertex_buffer.hpp"
 #include "sos/player_component.hpp"
+#include "sos/texture_atlas.hpp"
+#include "sos/lvl/tile.hpp"
 #include "wnd/window.hpp"
 
 i32 main() {
@@ -22,32 +24,50 @@ i32 main() {
 
     wnd::Window window{"stone and soil.", 1280, 720};
 
-    gfx::Shader shader{gfx::Shader::Desc{
-        .path = "res/shaders/cube.frag",
-        .type = GL_FRAGMENT_SHADER,
-    }, gfx::Shader::Desc{
-        .path = "res/shaders/cube.vert",
-        .type = GL_VERTEX_SHADER
-    }};
-
-    gfx::ImageTexture texture_atlas{"res/textureatlas.png"};
-
-    const glm::mat4 proj{glm::perspective(glm::radians(60.0f32), 256.0f32 / 144.0f32, 0.01f32, 1000.0f32)};
-
-    std::array vertices{
-        0.0f32, 0.0f32, -2.0f32, 0.0f32,            0.0f32,
-        1.0f32, 0.0f32, -2.0f32, 8.0f32 / 256.0f32, 0.0f32,
-        1.0f32, 1.0f32, -2.0f32, 8.0f32 / 256.0f32, 8.0f32 / 256.0f32,
-        1.0f32, 1.0f32, -2.0f32, 8.0f32 / 256.0f32, 8.0f32 / 256.0f32,
-        0.0f32, 1.0f32, -2.0f32, 0.0f32,            8.0f32 / 256.0f32,
-        0.0f32, 0.0f32, -2.0f32, 0.0f32,            0.0f32,
+    gfx::Shader shader{
+        gfx::Shader::Desc{
+            .path = "res/shaders/cube.frag",
+            .type = GL_FRAGMENT_SHADER,
+        },
+        gfx::Shader::Desc{
+            .path = "res/shaders/cube.vert",
+            .type = GL_VERTEX_SHADER
+        }
     };
 
+    sos::TextureAtlas& texture_atlas{sos::TextureAtlas::get()};
+
+    const glm::mat4 proj{glm::perspective(glm::radians(60.0f), 256.0f / 144.0f, 0.01f, 1000.0f)};
+
+    sos::lvl::Tile tile{sos::lvl::Tile::Type::grass};
+
+    std::vector<f32> vertices;
+
+    auto vertices0{tile.vertices(sos::lvl::Tile::Face::back, 1, 0, -2)};
+    vertices.insert(vertices.end(), vertices0.begin(), vertices0.end());
+
+    auto vertices1{tile.vertices(sos::lvl::Tile::Face::front, 1, 0, -2)};
+    vertices.insert(vertices.end(), vertices1.begin(), vertices1.end());
+
+    auto vertices2{tile.vertices(sos::lvl::Tile::Face::top, 1, 0, -2)};
+    vertices.insert(vertices.end(), vertices2.begin(), vertices2.end());
+
+    auto vertices3{tile.vertices(sos::lvl::Tile::Face::bottom, 1, 0, -2)};
+    vertices.insert(vertices.end(), vertices3.begin(), vertices3.end());
+
+    auto vertices4{tile.vertices(sos::lvl::Tile::Face::left, 1, 0, -2)};
+    vertices.insert(vertices.end(), vertices4.begin(), vertices4.end());
+
+    auto vertices5{tile.vertices(sos::lvl::Tile::Face::right, 1, 0, -2)};
+    vertices.insert(vertices.end(), vertices5.begin(), vertices5.end());
+
     gfx::VertexArray vao{};
-    gfx::VertexBuffer vbo{GL_STATIC_DRAW, vertices};
+    gfx::VertexBuffer vbo{GL_STATIC_DRAW, std::array<f32, 30 * 6>{}};
 
     vao.attribute<f32>(vbo, 0, 3, GL_FLOAT, 5, 0);
     vao.attribute<f32>(vbo, 1, 2, GL_FLOAT, 5, 3);
+
+    vbo.uploadData(0, sizeof(f32) * vertices.size(), vertices.data());
 
     gfx::Screen screen{window};
 
@@ -66,8 +86,9 @@ i32 main() {
 
         screen.bind();
 
-        glClearColor(0.2f32, 0.25f32, 0.65f32, 1.0f32);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0.2f32, 0.25f32, 0.65f32, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.bind();
 
@@ -78,7 +99,9 @@ i32 main() {
         vbo.bind();
         texture_atlas.bind();
 
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glDisable(GL_DEPTH_TEST);
 
         screen.unbind();
 
