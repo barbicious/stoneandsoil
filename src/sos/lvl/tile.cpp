@@ -15,10 +15,10 @@ namespace sos::lvl {
                 std::cerr << "Attempted to get air vertices." << std::endl;
             } break;
             case Type::grass: {
-                UV(this->u, this->v, 1, 0);
+                UV(this->u, this->v, 0, 0);
             } break;
             case Type::stone: {
-                UV(this->u, this->v, 2, 0);
+                UV(this->u, this->v, 1, 0);
             } break;
         }
     }

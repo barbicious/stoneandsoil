@@ -22,7 +22,7 @@ namespace sos::lvl {
             bottom,
         };
 
-        Tile(Type type);
+        explicit Tile(Type type);
 
         [[nodiscard]] std::array<f32, 30> vertices(Face face, i32 x, i32 y, i32 z) const;
 

@@ -16,6 +16,7 @@
 #include "gfx/vertex_buffer.hpp"
 #include "sos/player_component.hpp"
 #include "sos/texture_atlas.hpp"
+#include "sos/lvl/chunk_mesh.hpp"
 #include "sos/lvl/tile.hpp"
 #include "wnd/window.hpp"
 
@@ -39,35 +40,7 @@ i32 main() {
 
     const glm::mat4 proj{glm::perspective(glm::radians(60.0f), 256.0f / 144.0f, 0.01f, 1000.0f)};
 
-    sos::lvl::Tile tile{sos::lvl::Tile::Type::grass};
-
-    std::vector<f32> vertices;
-
-    auto vertices0{tile.vertices(sos::lvl::Tile::Face::back, 1, 0, -2)};
-    vertices.insert(vertices.end(), vertices0.begin(), vertices0.end());
-
-    auto vertices1{tile.vertices(sos::lvl::Tile::Face::front, 1, 0, -2)};
-    vertices.insert(vertices.end(), vertices1.begin(), vertices1.end());
-
-    auto vertices2{tile.vertices(sos::lvl::Tile::Face::top, 1, 0, -2)};
-    vertices.insert(vertices.end(), vertices2.begin(), vertices2.end());
-
-    auto vertices3{tile.vertices(sos::lvl::Tile::Face::bottom, 1, 0, -2)};
-    vertices.insert(vertices.end(), vertices3.begin(), vertices3.end());
-
-    auto vertices4{tile.vertices(sos::lvl::Tile::Face::left, 1, 0, -2)};
-    vertices.insert(vertices.end(), vertices4.begin(), vertices4.end());
-
-    auto vertices5{tile.vertices(sos::lvl::Tile::Face::right, 1, 0, -2)};
-    vertices.insert(vertices.end(), vertices5.begin(), vertices5.end());
-
-    gfx::VertexArray vao{};
-    gfx::VertexBuffer vbo{GL_STATIC_DRAW, std::array<f32, 30 * 6>{}};
-
-    vao.attribute<f32>(vbo, 0, 3, GL_FLOAT, 5, 0);
-    vao.attribute<f32>(vbo, 1, 2, GL_FLOAT, 5, 3);
-
-    vbo.uploadData(0, sizeof(f32) * vertices.size(), vertices.data());
+    sos::lvl::ChunkMesh chunk_mesh{};
 
     gfx::Screen screen{window};
 
@@ -95,11 +68,9 @@ i32 main() {
         shader.setMat4("u_proj", proj);
         shader.setMat4("u_view", player_entity.getComponent<sos::PlayerComponent>()->view());
 
-        vao.bind();
-        vbo.bind();
         texture_atlas.bind();
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        chunk_mesh.blit();
 
         glDisable(GL_DEPTH_TEST);
 
