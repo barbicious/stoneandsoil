@@ -1,6 +1,7 @@
 #include "level.hpp"
 
 #include <ranges>
+#include <thread>
 
 #include "chunk.hpp"
 
@@ -40,12 +41,51 @@ namespace sos::lvl {
             return;
         }
 
-        ChunkMesh* chunk_mesh{mesh_queue_.back()};
-        chunk_mesh->generateMesh(*this);
-        mesh_queue_.pop_back();
+        std::vector<ChunkMesh*> chunk_meshes_to_upload;
+
+        while (!mesh_queue_.empty()) {
+            ChunkMesh* chunk_mesh{mesh_queue_.back()};
+            std::jthread thread{&ChunkMesh::generateMesh, chunk_mesh, std::ref(*this)};
+            mesh_queue_.pop_back();
+            chunk_meshes_to_upload.push_back(chunk_mesh);
+        }
+
+        for (ChunkMesh* chunk_mesh : chunk_meshes_to_upload) {
+            chunk_mesh->uploadData();
+        }
     }
 
     void Level::pushMesh(ChunkMesh *chunk_mesh) {
         mesh_queue_.push_back(chunk_mesh);
+    }
+
+    void Level::crossBoundaries(const ChunkPosition &player_position) {
+        for (Chunk* const &chunk: chunks_ | std::views::values) {
+            chunk->dirty(true);
+        }
+
+        for (i32 z{-RENDER_DISTANCE + player_position.z}; z <= RENDER_DISTANCE + player_position.z; ++z) {
+            for (i32 y{-RENDER_DISTANCE + player_position.y}; y <= RENDER_DISTANCE + player_position.y; ++y) {
+                for (i32 x{-RENDER_DISTANCE + player_position.x}; x <= RENDER_DISTANCE + player_position.x; ++x) {
+                    const ChunkPosition chunk_position{
+                        .x = x,
+                        .y = y,
+                        .z = z
+                    };
+
+                    if (chunks_.contains(chunk_position)) {
+                        chunks_[chunk_position]->dirty(false);
+                    } else {
+                        Chunk* chunk{new Chunk{chunk_position, this}};
+                        chunks_[chunk_position] = chunk;
+                        mesh_queue_.push_back(chunk->chunkMesh());
+                    }
+                }
+            }
+        }
+
+        std::erase_if(chunks_, [](const auto &entry) {
+            return entry.second->dirty();
+        });
     }
 } // sos::lvl

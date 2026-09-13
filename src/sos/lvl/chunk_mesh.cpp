@@ -15,9 +15,6 @@ namespace sos::lvl {
     void ChunkMesh::generateMesh(Level &level) {
         vertices_.clear();
 
-        vertex_array_.bind();
-        vertex_buffer_.bind();
-
         for (i32 i{0}; i < Chunk::WIDTH * Chunk::HEIGHT * Chunk::DEPTH; ++i) {
             i32 x{i % 16};
             i32 y{(i / 16) % 16};
@@ -105,8 +102,6 @@ namespace sos::lvl {
                 }
             }
         }
-
-        vertex_buffer_.uploadData(0, sizeof(f32) * vertices_.size(), vertices_.data());
     }
 
     void ChunkMesh::blit() const {
@@ -114,6 +109,12 @@ namespace sos::lvl {
         vertex_buffer_.bind();
 
         glDrawArrays(GL_TRIANGLES, 0, static_cast<i32>(vertices_.size() / 5));
+    }
+
+    void ChunkMesh::uploadData() {
+        vertex_array_.bind();
+        vertex_buffer_.bind();
+        vertex_buffer_.uploadData(0, sizeof(f32) * vertices_.size(), vertices_.data());
     }
 
     void ChunkMesh::addVertices(const std::array<f32, 30> &vertices) {

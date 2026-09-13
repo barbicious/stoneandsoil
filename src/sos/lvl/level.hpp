@@ -35,9 +35,10 @@ namespace sos::lvl {
         }
 
         void pushMesh(ChunkMesh* chunk_mesh);
+        void crossBoundaries(const ChunkPosition &player_position);
 
     private:
-        static constexpr i8 RENDER_DISTANCE{1};
+        static constexpr i8 RENDER_DISTANCE{3};
 
         std::unordered_map<ChunkPosition, Chunk*> chunks_{};
         std::vector<ChunkMesh*> mesh_queue_{};

@@ -19,6 +19,14 @@ namespace sos {
 
         constexpr f32 SENSITIVITY{0.1};
 
+        lvl::ChunkPosition old_chunk_position{
+            lvl::ChunkPosition::fromTileCoordinates(
+            static_cast<i32>(position_.x),
+            static_cast<i32>(position_.y),
+            static_cast<i32>(position_.z)
+        )};
+
+
         if (window_.keyboard().isKeyDown(GLFW_KEY_W)) {
             position_ += speed * front_;
         }
@@ -33,6 +41,17 @@ namespace sos {
 
         if (window_.keyboard().isKeyDown(GLFW_KEY_A)) {
             position_ -= glm::normalize(glm::cross(front_, UP)) * speed;
+        }
+
+        lvl::ChunkPosition new_chunk_position{lvl::ChunkPosition{
+            lvl::ChunkPosition::fromTileCoordinates(
+            static_cast<i32>(position_.x),
+            static_cast<i32>(position_.y),
+            static_cast<i32>(position_.z)
+        )}};
+
+        if (old_chunk_position != new_chunk_position) {
+            level_.crossBoundaries(new_chunk_position);
         }
 
         f32 mouse_delta_x{std::get<0>(window_.mouse().delta()) * SENSITIVITY}, mouse_delta_y{std::get<1>(window_.mouse().delta()) * SENSITIVITY};

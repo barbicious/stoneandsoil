@@ -44,6 +44,14 @@ namespace sos::lvl {
             tiles_[x + WIDTH * (y + HEIGHT * z)] = idx;
         }
 
+        void dirty(bool dirty) {
+            dirty_ = dirty;
+        }
+
+        [[nodiscard]] bool dirty() const noexcept {
+            return dirty_;
+        }
+
     private:
         std::array<usize, WIDTH * HEIGHT * DEPTH> tiles_{};
 
@@ -51,5 +59,7 @@ namespace sos::lvl {
         ChunkPosition chunk_position_;
 
         Level *level_;
+
+        bool dirty_{false};
     };
 } // sos::lvl

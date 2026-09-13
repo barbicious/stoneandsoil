@@ -58,11 +58,11 @@ namespace sos::lvl {
             case Face::front: {
                 return std::array{
                     xf, world_yf, world_zf, u_full, v_full,
+                    world_xf, yf, world_zf, u, v,
                     world_xf, world_yf, world_zf, u, v_full,
                     world_xf, yf, world_zf, u, v,
-                    world_xf, yf, world_zf, u, v,
-                    xf, yf, world_zf, u_full, v,
                     xf, world_yf, world_zf, u_full, v_full,
+                    xf, yf, world_zf, u_full, v,
                 };
             }
             break;
@@ -80,11 +80,11 @@ namespace sos::lvl {
             case Face::right: {
                 return std::array{
                     world_xf, yf, zf, u, v,
+                    world_xf, world_yf, world_zf, u_full, v_full,
                     world_xf, yf, world_zf, u_full, v,
                     world_xf, world_yf, world_zf, u_full, v_full,
-                    world_xf, world_yf, world_zf, u_full, v_full,
-                    world_xf, world_yf, zf, u, v_full,
                     world_xf, yf, zf, u, v,
+                    world_xf, world_yf, zf, u, v_full,
                 };
             }
             break;
@@ -102,16 +102,14 @@ namespace sos::lvl {
             case Face::bottom: {
                 return std::array{
                     xf, yf, zf, u, v,
+                    world_xf, yf, world_zf, u_full, v_full,
                     xf, yf, world_zf, u_full, v,
                     world_xf, yf, world_zf, u_full, v_full,
-                    world_xf, yf, world_zf, u_full, v_full,
-                    world_xf, yf, zf, u, v_full,
                     xf, yf, zf, u, v,
+                    world_xf, yf, zf, u, v_full,
                 };
             }
             break;
         }
-
-        std::abort();
     }
 } // sos::lvl

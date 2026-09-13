@@ -19,6 +19,10 @@ i32 main() {
 
     wnd::Window window{"stone and soil.", 1280, 720};
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
     gfx::Shader shader{
         gfx::Shader::Desc{
             .path = "res/shaders/cube.frag",
@@ -34,7 +38,7 @@ i32 main() {
 
     const glm::mat4 proj{glm::perspective(glm::radians(60.0f), 256.0f / 144.0f, 0.01f, 1000.0f)};
 
-    sos::lvl::Level level{};
+    sos::lvl::Level level;
 
     gfx::Screen screen{window};
 

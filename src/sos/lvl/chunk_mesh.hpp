@@ -17,6 +17,7 @@ namespace sos::lvl {
         void generateMesh(Level &level);
 
         void blit() const override;
+        void uploadData();
 
     private:
         std::vector<f32> vertices_;
