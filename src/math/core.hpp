@@ -5,8 +5,11 @@ namespace math {
     T divEuclid(T const& a, T const& b) {
         T q = a / b;
         if (a % b < 0) {
-            if (b > 0) q -= 1;
-            else q += 1;
+            if (b > 0) {
+                --q;
+            } else {
+                ++q;
+            }
         }
         return q;
     }

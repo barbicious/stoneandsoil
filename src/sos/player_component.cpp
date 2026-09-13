@@ -59,9 +59,9 @@ namespace sos {
 
                 lvl::ChunkPosition chunk_position{
                     lvl::ChunkPosition::fromTileCoordinates(
-                    static_cast<i32>(ray.end().x),
-                    static_cast<i32>(ray.end().y),
-                    static_cast<i32>(ray.end().z)
+                    static_cast<i32>(std::floor(ray.end().x)),
+                    static_cast<i32>(std::floor(ray.end().y)),
+                    static_cast<i32>(std::floor(ray.end().z))
                 )};
 
                 lvl::Chunk *chunk{level_.chunkAt(chunk_position)};
