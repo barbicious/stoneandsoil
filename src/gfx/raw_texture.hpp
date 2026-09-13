@@ -8,8 +8,8 @@ namespace gfx {
         explicit RawTexture(u32 target);
         ~RawTexture() override = 0;
 
-        void bind() override;
-        void unbind() override;
+        void bind() const override;
+        void unbind() const override;
 
     protected:
         [[nodiscard]] u32 target() const {

@@ -7,6 +7,7 @@ namespace gfx {
     class ImageTexture : public RawTexture {
     public:
         explicit ImageTexture(const std::filesystem::path &image_path);
+
         ~ImageTexture() override = default;
 
         [[nodiscard]] i32 width() const {

@@ -9,21 +9,27 @@
     v0 = (v1 * texture_height) / static_cast<f32>(TextureAtlas::get().height());
 
 namespace sos::lvl {
-    Tile::Tile(Type type) : type{type} {
+    Tile::Tile(Type type) : type_{type} {
         switch (type) {
             case Type::air: {
-                std::cerr << "Attempted to get air vertices." << std::endl;
-            } break;
+            }
+            break;
             case Type::grass: {
                 UV(this->u, this->v, 0, 0);
-            } break;
+            }
+            break;
             case Type::stone: {
                 UV(this->u, this->v, 1, 0);
-            } break;
+            }
+            break;
         }
     }
 
     std::array<f32, 30> Tile::vertices(Face face, i32 x, i32 y, i32 z) const {
+        if (type_ == Type::air) {
+            std::cerr << "Attempted to get air vertices." << std::endl;
+        }
+
         UV(f32 u_full, f32 v_full, 1.0, 1.0);
 
         u_full += u;
@@ -47,7 +53,8 @@ namespace sos::lvl {
                     xf, yf, zf, u_full, v,
                     xf, world_yf, zf, u_full, v_full,
                 };
-            } break;
+            }
+            break;
             case Face::front: {
                 return std::array{
                     xf, world_yf, world_zf, u_full, v_full,
@@ -57,7 +64,8 @@ namespace sos::lvl {
                     xf, yf, world_zf, u_full, v,
                     xf, world_yf, world_zf, u_full, v_full,
                 };
-            } break;
+            }
+            break;
             case Face::left: {
                 return std::array{
                     xf, yf, zf, u, v,
@@ -67,7 +75,8 @@ namespace sos::lvl {
                     xf, world_yf, zf, u, v_full,
                     xf, yf, zf, u, v,
                 };
-            } break;
+            }
+            break;
             case Face::right: {
                 return std::array{
                     world_xf, yf, zf, u, v,
@@ -77,7 +86,8 @@ namespace sos::lvl {
                     world_xf, world_yf, zf, u, v_full,
                     world_xf, yf, zf, u, v,
                 };
-            } break;
+            }
+            break;
             case Face::top: {
                 return std::array{
                     xf, world_yf, zf, u, v,
@@ -87,7 +97,8 @@ namespace sos::lvl {
                     world_xf, world_yf, zf, u, v_full,
                     xf, world_yf, zf, u, v,
                 };
-            } break;
+            }
+            break;
             case Face::bottom: {
                 return std::array{
                     xf, yf, zf, u, v,
@@ -97,7 +108,10 @@ namespace sos::lvl {
                     world_xf, yf, zf, u, v_full,
                     xf, yf, zf, u, v,
                 };
-            } break;
+            }
+            break;
         }
+
+        std::abort();
     }
 } // sos::lvl

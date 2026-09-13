@@ -9,11 +9,11 @@ namespace gfx {
         glBufferSubData(type, offset, size, data);
     }
 
-    void Buffer::bind() {
+    void Buffer::bind() const {
         glBindBuffer(type, id);
     }
 
-    void Buffer::unbind() {
+    void Buffer::unbind() const {
         glBindBuffer(type, 0);
     }
 } // gfx

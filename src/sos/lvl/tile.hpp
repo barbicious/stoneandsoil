@@ -26,14 +26,19 @@ namespace sos::lvl {
 
         [[nodiscard]] std::array<f32, 30> vertices(Face face, i32 x, i32 y, i32 z) const;
 
+        [[nodiscard]] const Type &type() const noexcept {
+            return type_;
+        }
+
     private:
         const f32 texture_width{8.0f}, texture_height{8.0f};
 
-        const f32 gl_texture_width{8.0f / static_cast<f32>(TextureAtlas::get().width())}, gl_texture_height{8.0f / static_cast<f32>(TextureAtlas::get().height())};
+        const f32 gl_texture_width{8.0f / static_cast<f32>(TextureAtlas::get().width())}, gl_texture_height{
+                    8.0f / static_cast<f32>(TextureAtlas::get().height())
+                };
 
         f32 u{}, v{};
 
-        Type type;
-
+        Type type_;
     };
 } // sos::lvl

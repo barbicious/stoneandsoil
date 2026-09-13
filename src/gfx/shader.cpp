@@ -9,11 +9,11 @@ namespace gfx {
         glDeleteProgram(id);
     }
 
-    void Shader::bind() {
+    void Shader::bind() const {
         glUseProgram(id);
     }
 
-    void Shader::unbind() {
+    void Shader::unbind() const {
         glUseProgram(0);
     }
 
@@ -39,7 +39,7 @@ namespace gfx {
         file_buffer << file.rdbuf();
 
         std::string file_string{file_buffer.str()};
-        const char* file_c_string{file_string.c_str()};
+        const char *file_c_string{file_string.c_str()};
 
         glShaderSource(shader, 1, &file_c_string, nullptr);
         glCompileShader(shader);
@@ -48,7 +48,7 @@ namespace gfx {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
         if (!success) {
-            std::array<char, 512> error_buffer{};
+            std::array < char, 512 > error_buffer{};
             glGetShaderInfoLog(shader, error_buffer.size(), nullptr, error_buffer.data());
 
             std::cerr << error_buffer.data() << std::endl;

@@ -18,11 +18,11 @@ namespace gfx {
         glDeleteTextures(1, &id_);
     }
 
-    void RawTexture::bind() {
+    void RawTexture::bind() const {
         glBindTexture(target_, id_);
     }
 
-    void RawTexture::unbind() {
+    void RawTexture::unbind() const {
         glBindTexture(target_, 0);
     }
 } // gfx

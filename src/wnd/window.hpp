@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string_view>
 
 #include "keyboard.hpp"
@@ -8,14 +9,15 @@
 namespace wnd {
     class Window {
     public:
-        Window(const std::string_view& title, i32 width, i32 height);
+        Window(const std::string_view &title, i32 width, i32 height);
 
         bool isGood();
+
         void splat();
 
         void viewport() const;
 
-        [[nodiscard]] GLFWwindow* glfwWindow() const {
+        [[nodiscard]] GLFWwindow *glfwWindow() const {
             return glfw_window_;
         }
 
@@ -31,7 +33,7 @@ namespace wnd {
         Keyboard keyboard_;
         Mouse mouse_;
 
-        GLFWwindow* glfw_window_;
+        GLFWwindow *glfw_window_;
 
         i32 width_, height_;
     };

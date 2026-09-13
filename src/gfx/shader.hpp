@@ -37,8 +37,8 @@ namespace gfx {
 
         ~Shader() override;
 
-        void bind() override;
-        void unbind() override;
+        void bind() const override;
+        void unbind() const override;
 
         void setMat4(const std::string_view &name, const glm::mat4 &value) const;
         void setI32(const std::string_view &name, i32 value) const;

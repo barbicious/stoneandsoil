@@ -10,11 +10,11 @@ namespace gfx {
         glDeleteVertexArrays(1, &id);
     }
 
-    void VertexArray::bind() {
+    void VertexArray::bind() const {
         glBindVertexArray(id);
     }
 
-    void VertexArray::unbind() {
+    void VertexArray::unbind() const {
         glBindVertexArray(0);
     }
 } // gfx

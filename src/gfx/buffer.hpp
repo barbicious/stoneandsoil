@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <optional>
 
 #include "i_bindable.hpp"
 #include "../types.hpp"
@@ -9,18 +8,19 @@
 namespace gfx {
     class Buffer : public IBindable {
     public:
-        template <typename T, usize N>
+        template<typename T, usize N>
         Buffer(u32 type, u32 draw_mode, const std::array<T, N> &data);
+
         ~Buffer() override = 0;
 
-        void uploadData(u32 offset, u32 size, void* data) const;
+        void uploadData(u32 offset, u32 size, void *data) const;
 
-        void bind() override;
-        void unbind() override;
+        void bind() const override;
+
+        void unbind() const override;
 
     private:
         u32 id{}, type{};
-
     };
 } // gfx
 

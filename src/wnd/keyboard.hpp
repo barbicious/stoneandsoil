@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

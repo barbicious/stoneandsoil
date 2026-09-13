@@ -5,6 +5,6 @@ namespace sos::lvl {
     public:
         virtual ~IBlittable() = default;
 
-        virtual void blit() = 0;
+        virtual void blit() const = 0;
     };
 } // sos::lvl

@@ -13,32 +13,39 @@ namespace gfx {
     class Screen : public IBindable {
     public:
         explicit Screen(const wnd::Window &window);
+
         ~Screen() override = default;
 
-        void bind() override;
-        void unbind() override;
+        void bind() const override;
+
+        void unbind() const override;
 
     private:
         static constexpr u32 Width{256}, Height{144};
 
         const wnd::Window &window;
 
-        Shader shader_{Shader::Desc{
-            .path = "res/shaders/screen.vert",
-            .type = GL_VERTEX_SHADER
-        }, Shader::Desc{
-            .path = "res/shaders/screen.frag",
-            .type = GL_FRAGMENT_SHADER
-        }};
+        Shader shader_{
+            Shader::Desc{
+                .path = "res/shaders/screen.vert",
+                .type = GL_VERTEX_SHADER
+            },
+            Shader::Desc{
+                .path = "res/shaders/screen.frag",
+                .type = GL_FRAGMENT_SHADER
+            }
+        };
         VertexArray vertex_array_{};
-        VertexBuffer vertex_buffer_{GL_STATIC_DRAW, std::array{
-            -1.0f, -1.0f, 0.0f, 0.0f,
-            1.0f, -1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 0.0f, 1.0f,
-            -1.0f, -1.0f, 0.0f, 0.0f,
-        }};
+        VertexBuffer vertex_buffer_{
+            GL_STATIC_DRAW, std::array{
+                -1.0f, -1.0f, 0.0f, 0.0f,
+                1.0f, -1.0f, 1.0f, 0.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                -1.0f, 1.0f, 0.0f, 1.0f,
+                -1.0f, -1.0f, 0.0f, 0.0f,
+            }
+        };
         RenderTexture render_texture_{Width, Height};
     };
 } // gfx

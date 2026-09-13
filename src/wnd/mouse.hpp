@@ -2,6 +2,9 @@
 
 #include <tuple>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "../types.hpp"
 
 namespace wnd {
@@ -14,6 +17,8 @@ namespace wnd {
         [[nodiscard]] std::tuple<f32, f32> delta() const {
             return std::tuple{delta_x, delta_y};
         }
+
+        [[nodiscard]] bool isButtonDown(i32 button) const;
 
         friend class Window;
 

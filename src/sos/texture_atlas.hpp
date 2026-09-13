@@ -23,8 +23,8 @@ namespace sos {
             return image_texture_.height();
         }
 
-        void bind() override;
-        void unbind() override;
+        void bind() const override;
+        void unbind() const override;
 
     private:
         TextureAtlas() = default;

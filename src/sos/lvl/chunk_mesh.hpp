@@ -7,16 +7,22 @@
 #include "../../gfx/vertex_buffer.hpp"
 
 namespace sos::lvl {
+    class Level;
+    class Chunk;
+
     class ChunkMesh : public IBlittable {
     public:
-        ChunkMesh();
+        explicit ChunkMesh(const Chunk *chunk);
 
-        void blit() override;
+        void generateMesh(Level &level);
+
+        void blit() const override;
 
     private:
         std::vector<f32> vertices_;
         gfx::VertexArray vertex_array_{};
-        gfx::VertexBuffer vertex_buffer_{GL_STREAM_DRAW, std::array<f32, 180 * 16 * 16 * 16>{}};
+        gfx::VertexBuffer vertex_buffer_{GL_DYNAMIC_DRAW, std::array<f32, 180 * 16 * 16 * 16>{}};
+        const Chunk *chunk_;
 
         void addVertices(const std::array<f32, 30> &vertices);
     };
