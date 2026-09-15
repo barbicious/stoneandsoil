@@ -11,7 +11,7 @@
 #include "lvl/level.hpp"
 
 namespace sos {
-    PlayerComponent::PlayerComponent(const wnd::Window &window, lvl::Level &level) : window_{window}, level_{level} {
+    PlayerComponent::PlayerComponent(const wnd::Window& window, lvl::Level& level) : window_{window}, level_{level} {
     }
 
     void PlayerComponent::tick(f32 delta_time) {
@@ -21,10 +21,11 @@ namespace sos {
 
         lvl::ChunkPosition old_chunk_position{
             lvl::ChunkPosition::fromTileCoordinates(
-            static_cast<i32>(position_.x),
-            static_cast<i32>(position_.y),
-            static_cast<i32>(position_.z)
-        )};
+                static_cast<i32>(position_.x),
+                static_cast<i32>(position_.y),
+                static_cast<i32>(position_.z)
+            )
+        };
 
 
         if (window_.keyboard().isKeyDown(GLFW_KEY_W)) {
@@ -43,20 +44,26 @@ namespace sos {
             position_ -= glm::normalize(glm::cross(front_, UP)) * speed;
         }
 
-        lvl::ChunkPosition new_chunk_position{lvl::ChunkPosition{
-            lvl::ChunkPosition::fromTileCoordinates(
-            static_cast<i32>(position_.x),
-            static_cast<i32>(position_.y),
-            static_cast<i32>(position_.z)
-        )}};
+        lvl::ChunkPosition new_chunk_position{
+            lvl::ChunkPosition{
+                lvl::ChunkPosition::fromTileCoordinates(
+                    static_cast<i32>(position_.x),
+                    static_cast<i32>(position_.y),
+                    static_cast<i32>(position_.z)
+                )
+            }
+        };
 
         if (old_chunk_position != new_chunk_position) {
             level_.crossBoundaries(new_chunk_position);
         }
 
-        f32 mouse_delta_x{std::get<0>(window_.mouse().delta()) * SENSITIVITY}, mouse_delta_y{std::get<1>(window_.mouse().delta()) * SENSITIVITY};
+        f32 mouse_delta_x{std::get < 0 > (window_.mouse().delta()) * SENSITIVITY}, mouse_delta_y{
+            std::get < 1 > (window_.mouse().delta()) * SENSITIVITY
+        };
 
-        if (mouse_delta_x != 0 or mouse_delta_y != 0) {
+        if (mouse_delta_x != 0 or mouse_delta_y != 0)
+        {
             yaw_ += mouse_delta_x;
             pitch_ = glm::clamp(pitch_ + mouse_delta_y, -89.0f, 89.0f);
 
@@ -78,25 +85,35 @@ namespace sos {
 
                 lvl::ChunkPosition chunk_position{
                     lvl::ChunkPosition::fromTileCoordinates(
-                    static_cast<i32>(std::floor(ray.end().x)),
-                    static_cast<i32>(std::floor(ray.end().y)),
-                    static_cast<i32>(std::floor(ray.end().z))
-                )};
+                        static_cast<i32>(std::floor(ray.end().x)),
+                        static_cast<i32>(std::floor(ray.end().y)),
+                        static_cast<i32>(std::floor(ray.end().z))
+                    )
+                };
 
-                lvl::Chunk *chunk{level_.chunkAt(chunk_position)};
+                lvl::Chunk* chunk{level_.chunkAt(chunk_position)};
 
                 //std::cout << chunk_position.x << ", " << chunk_position.y << ", " << chunk_position.z << std::endl;
 
-                usize tile_x{static_cast<usize>(math::remEuclid(static_cast<i32>(std::floor(ray.end().x)), static_cast<i32>(lvl::Chunk::WIDTH)))};
-                usize tile_y{static_cast<usize>(math::remEuclid(static_cast<i32>(std::floor(ray.end().y)), static_cast<i32>(lvl::Chunk::HEIGHT)))};
-                usize tile_z{static_cast<usize>(math::remEuclid(static_cast<i32>(std::floor(ray.end().z)), static_cast<i32>(lvl::Chunk::DEPTH)))};
+                usize tile_x{
+                    static_cast<usize>(math::remEuclid(static_cast<i32>(std::floor(ray.end().x)),
+                                                       static_cast<i32>(lvl::Chunk::WIDTH)))
+                };
+                usize tile_y{
+                    static_cast<usize>(math::remEuclid(static_cast<i32>(std::floor(ray.end().y)),
+                                                       static_cast<i32>(lvl::Chunk::HEIGHT)))
+                };
+                usize tile_z{
+                    static_cast<usize>(math::remEuclid(static_cast<i32>(std::floor(ray.end().z)),
+                                                       static_cast<i32>(lvl::Chunk::DEPTH)))
+                };
 
                 if (lvl::TileRegistry::get()[chunk->tileAt(tile_x, tile_y, tile_z)].type() == lvl::Tile::Type::air) {
                     continue;
                 }
                 std::cout << tile_x << ", " << tile_y << ", " << tile_z << std::endl;
 
-                chunk->setTile(tile_x, tile_y, tile_z, 0);
+                chunk->setTile(tile_x, tile_y, tile_z, static_cast<usize>(lvl::Tile::Type::air));
                 level_.pushMesh(chunk->chunkMesh());
                 break;
             }

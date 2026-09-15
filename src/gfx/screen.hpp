@@ -12,7 +12,7 @@ namespace wnd {
 namespace gfx {
     class Screen : public IBindable {
     public:
-        explicit Screen(const wnd::Window &window);
+        explicit Screen(const wnd::Window& window);
 
         ~Screen() override = default;
 
@@ -23,7 +23,7 @@ namespace gfx {
     private:
         static constexpr u32 Width{256}, Height{144};
 
-        const wnd::Window &window;
+        const wnd::Window& window;
 
         Shader shader_{
             Shader::Desc{

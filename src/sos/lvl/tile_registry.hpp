@@ -7,24 +7,24 @@
 namespace sos::lvl {
     class TileRegistry {
     public:
-        TileRegistry(const TileRegistry &) = delete;
+        TileRegistry(const TileRegistry&) = delete;
 
-        TileRegistry &operator=(const TileRegistry &) = delete;
+        TileRegistry& operator=(const TileRegistry&) = delete;
 
-        TileRegistry(TileRegistry &&) = delete;
+        TileRegistry(TileRegistry&&) = delete;
 
-        TileRegistry &operator=(TileRegistry &&) = delete;
+        TileRegistry& operator=(TileRegistry&&) = delete;
 
-        [[nodiscard]] static TileRegistry &get() {
+        [[nodiscard]] static TileRegistry& get() {
             static TileRegistry tile_registry;
             return tile_registry;
         }
 
-        const Tile &operator[](const usize index) const noexcept {
+        const Tile& operator[](const usize index) const noexcept {
             return tiles_[index];
         }
 
-        const usize &operator[](const std::string &name) const noexcept {
+        const usize& operator[](const std::string& name) const noexcept {
             return names_.at(name);
         }
 
@@ -34,6 +34,6 @@ namespace sos::lvl {
 
         TileRegistry();
 
-        void addTile(const std::string &name, Tile tile);
+        void addTile(const std::string& name, Tile tile);
     };
 } // sos::lvl

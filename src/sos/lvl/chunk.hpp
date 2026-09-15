@@ -10,17 +10,37 @@ namespace sos::lvl {
     public:
         static constexpr u32 WIDTH{16}, HEIGHT{16}, DEPTH{16};
 
-        Chunk(ChunkPosition chunk_position, Level *level);
+        class Layer {
+        public:
+            Layer() = default;
 
-        [[nodiscard]] const ChunkMesh &chunkMesh() const noexcept {
+            void addOpaque() {
+                opaque_tile_count_++;
+            }
+
+            void removeOpaque() {
+                opaque_tile_count_--;
+            }
+
+            [[nodiscard]] bool isCompletelyOpaque() const noexcept {
+                return opaque_tile_count_ == WIDTH * DEPTH;
+            }
+
+        private:
+            i32 opaque_tile_count_{};
+        };
+
+        Chunk(ChunkPosition chunk_position, Level* level);
+
+        [[nodiscard]] const ChunkMesh& chunkMesh() const noexcept {
             return chunk_mesh_;
         }
 
-        [[nodiscard]] ChunkMesh *chunkMesh() noexcept {
+        [[nodiscard]] ChunkMesh* chunkMesh() noexcept {
             return &chunk_mesh_;
         }
 
-        [[nodiscard]] const ChunkPosition &chunkPosition() const noexcept {
+        [[nodiscard]] const ChunkPosition& chunkPosition() const noexcept {
             return chunk_position_;
         }
 
@@ -41,6 +61,11 @@ namespace sos::lvl {
         }
 
         void setTile(usize x, usize y, usize z, usize idx) {
+            if (static_cast<Tile::Type>(idx) == Tile::Type::air) {
+                layers_[y].removeOpaque();
+            } else {
+                layers_[y].addOpaque();
+            }
             tiles_[x + WIDTH * (y + HEIGHT * z)] = idx;
         }
 
@@ -52,13 +77,18 @@ namespace sos::lvl {
             return dirty_;
         }
 
+        [[nodiscard]] const Layer& layer(const usize y) const noexcept {
+            return layers_[y];
+        }
+
     private:
         std::array<usize, WIDTH * HEIGHT * DEPTH> tiles_{};
+        std::array<Layer, HEIGHT> layers_{};
 
         ChunkMesh chunk_mesh_;
         ChunkPosition chunk_position_;
 
-        Level *level_;
+        Level* level_;
 
         bool dirty_{false};
     };

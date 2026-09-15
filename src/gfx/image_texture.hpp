@@ -6,7 +6,7 @@
 namespace gfx {
     class ImageTexture : public RawTexture {
     public:
-        explicit ImageTexture(const std::filesystem::path &image_path);
+        explicit ImageTexture(const std::filesystem::path& image_path);
 
         ~ImageTexture() override = default;
 

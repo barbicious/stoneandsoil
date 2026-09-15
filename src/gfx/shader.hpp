@@ -27,7 +27,7 @@ namespace gfx {
             i32 success{};
             glGetProgramiv(id, GL_LINK_STATUS, &success);
             if (!success) {
-                std::array<char, 512> error_buffer{};
+                std::array < char, 512 > error_buffer{};
                 glGetProgramInfoLog(id, error_buffer.size(), nullptr, error_buffer.data());
                 std::cerr << error_buffer.data() << std::endl;
             }
@@ -40,8 +40,8 @@ namespace gfx {
         void bind() const override;
         void unbind() const override;
 
-        void setMat4(const std::string_view &name, const glm::mat4 &value) const;
-        void setI32(const std::string_view &name, i32 value) const;
+        void setMat4(const std::string_view& name, const glm::mat4& value) const;
+        void setI32(const std::string_view& name, i32 value) const;
 
     private:
         u32 id{};

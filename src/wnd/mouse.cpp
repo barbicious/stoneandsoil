@@ -3,7 +3,7 @@
 #include "window.hpp"
 
 namespace wnd {
-    Mouse::Mouse(const Window *window) : window{window} {
+    Mouse::Mouse(const Window* window) : window{window} {
     }
 
     bool Mouse::isButtonDown(i32 button) const {

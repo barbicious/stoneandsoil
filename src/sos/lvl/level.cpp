@@ -1,9 +1,11 @@
 #include "level.hpp"
 
+#include <future>
 #include <ranges>
 #include <thread>
 
 #include "chunk.hpp"
+#include "../../thread_pool.hpp"
 
 namespace sos::lvl {
     Level::Level() {
@@ -25,13 +27,13 @@ namespace sos::lvl {
     }
 
     Level::~Level() {
-        for (Chunk *chunk: chunks_ | std::views::values) {
+        for (Chunk* chunk : chunks_ | std::views::values) {
             delete chunk;
         }
     }
 
     void Level::blit() const {
-        for (const Chunk* const &chunk: chunks_ | std::views::values) {
+        for (const Chunk* const & chunk : chunks_ | std::views::values) {
             chunk->chunkMesh().blit();
         }
     }
@@ -41,26 +43,35 @@ namespace sos::lvl {
             return;
         }
 
-        std::vector<ChunkMesh*> chunk_meshes_to_upload;
+        ThreadPool thread_pool{8};
+
+        std::vector<std::future<ChunkMesh*>> chunk_meshes_to_upload;
 
         while (!mesh_queue_.empty()) {
             ChunkMesh* chunk_mesh{mesh_queue_.back()};
-            std::jthread thread{&ChunkMesh::generateMesh, chunk_mesh, std::ref(*this)};
             mesh_queue_.pop_back();
-            chunk_meshes_to_upload.push_back(chunk_mesh);
+
+            auto future{
+                thread_pool.enqueue([this, chunk_mesh] {
+                    chunk_mesh->generateMesh(*this);
+                    return chunk_mesh;
+                })
+            };
+
+            chunk_meshes_to_upload.emplace_back(std::move(future));
         }
 
-        for (ChunkMesh* chunk_mesh : chunk_meshes_to_upload) {
-            chunk_mesh->uploadData();
+        for (std::future<ChunkMesh*>& chunk_mesh : chunk_meshes_to_upload) {
+            chunk_mesh.get()->uploadData();
         }
     }
 
-    void Level::pushMesh(ChunkMesh *chunk_mesh) {
+    void Level::pushMesh(ChunkMesh* chunk_mesh) {
         mesh_queue_.push_back(chunk_mesh);
     }
 
-    void Level::crossBoundaries(const ChunkPosition &player_position) {
-        for (Chunk* const &chunk: chunks_ | std::views::values) {
+    void Level::crossBoundaries(const ChunkPosition& player_position) {
+        for (Chunk* const & chunk : chunks_ | std::views::values) {
             chunk->dirty(true);
         }
 
@@ -84,7 +95,7 @@ namespace sos::lvl {
             }
         }
 
-        std::erase_if(chunks_, [](const auto &entry) {
+        std::erase_if(chunks_, [](const auto& entry) {
             return entry.second->dirty();
         });
     }

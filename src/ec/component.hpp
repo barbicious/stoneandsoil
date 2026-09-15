@@ -10,6 +10,6 @@ namespace ec {
         friend class Entity;
 
     private:
-        Entity *entity_;
+        Entity* entity_;
     };
 } // ec

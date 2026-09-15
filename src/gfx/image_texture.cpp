@@ -5,8 +5,8 @@
 #include <stb/stb_image.h>
 
 namespace gfx {
-    ImageTexture::ImageTexture(const std::filesystem::path &image_path) : RawTexture{GL_TEXTURE_2D} {
-        u8 *data{stbi_load(image_path.c_str(), &width_, &height_, &channels_, 4)};
+    ImageTexture::ImageTexture(const std::filesystem::path& image_path) : RawTexture{GL_TEXTURE_2D} {
+        u8* data{stbi_load(image_path.c_str(), &width_, &height_, &channels_, 4)};
         if (data == nullptr) {
             std::cerr << stbi_failure_reason() << std::endl;
         } else {

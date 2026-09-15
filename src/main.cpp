@@ -34,7 +34,7 @@ i32 main() {
         }
     };
 
-    sos::TextureAtlas& texture_atlas{sos::TextureAtlas::get()};
+    const sos::TextureAtlas& texture_atlas{sos::TextureAtlas::get()};
 
     const glm::mat4 proj{glm::perspective(glm::radians(60.0f), 256.0f / 144.0f, 0.01f, 1000.0f)};
 

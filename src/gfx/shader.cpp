@@ -17,11 +17,11 @@ namespace gfx {
         glUseProgram(0);
     }
 
-    void Shader::setMat4(const std::string_view &name, const glm::mat4 &value) const {
+    void Shader::setMat4(const std::string_view& name, const glm::mat4& value) const {
         glUniformMatrix4fv(glGetUniformLocation(id, name.data()), 1, false, glm::value_ptr(value));
     }
 
-    void Shader::setI32(const std::string_view &name, i32 value) const {
+    void Shader::setI32(const std::string_view& name, i32 value) const {
         glUniform1i(glGetUniformLocation(id, name.data()), value);
     }
 
@@ -39,7 +39,7 @@ namespace gfx {
         file_buffer << file.rdbuf();
 
         std::string file_string{file_buffer.str()};
-        const char *file_c_string{file_string.c_str()};
+        const char* file_c_string{file_string.c_str()};
 
         glShaderSource(shader, 1, &file_c_string, nullptr);
         glCompileShader(shader);

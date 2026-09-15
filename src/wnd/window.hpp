@@ -9,7 +9,7 @@
 namespace wnd {
     class Window {
     public:
-        Window(const std::string_view &title, i32 width, i32 height);
+        Window(const std::string_view& title, i32 width, i32 height);
 
         bool isGood();
 
@@ -17,15 +17,15 @@ namespace wnd {
 
         void viewport() const;
 
-        [[nodiscard]] GLFWwindow *glfwWindow() const {
+        [[nodiscard]] GLFWwindow* glfwWindow() const {
             return glfw_window_;
         }
 
-        [[nodiscard]] const Keyboard &keyboard() const {
+        [[nodiscard]] const Keyboard& keyboard() const {
             return keyboard_;
         }
 
-        [[nodiscard]] const Mouse &mouse() const {
+        [[nodiscard]] const Mouse& mouse() const {
             return mouse_;
         }
 
@@ -33,7 +33,7 @@ namespace wnd {
         Keyboard keyboard_;
         Mouse mouse_;
 
-        GLFWwindow *glfw_window_;
+        GLFWwindow* glfw_window_;
 
         i32 width_, height_;
     };

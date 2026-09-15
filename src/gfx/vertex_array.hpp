@@ -15,7 +15,7 @@ namespace gfx {
         void unbind() const override;
 
         template <typename T>
-        void attribute(Buffer &buffer, u32 index, i32 size, GLenum type, usize stride, u32 offset) const;
+        void attribute(Buffer& buffer, u32 index, i32 size, GLenum type, usize stride, u32 offset) const;
 
     private:
         u32 id{};

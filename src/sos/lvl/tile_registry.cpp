@@ -7,7 +7,7 @@ namespace sos::lvl {
         addTile("stone", Tile{Tile::Type::stone});
     }
 
-    void TileRegistry::addTile(const std::string &name, Tile tile) {
+    void TileRegistry::addTile(const std::string& name, Tile tile) {
         names_[name] = tiles_.size();
         tiles_.push_back(tile);
     }

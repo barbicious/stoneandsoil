@@ -12,7 +12,7 @@ namespace wnd {
 
     class Keyboard : public ITickable {
     public:
-        explicit Keyboard(const Window *window);
+        explicit Keyboard(const Window* window);
 
         ~Keyboard() override = default;
 
@@ -25,6 +25,6 @@ namespace wnd {
         std::array<bool, GLFW_KEY_LAST> current_keys_{};
         std::array<bool, GLFW_KEY_LAST> previous_keys_{};
 
-        const Window *window;
+        const Window* window;
     };
 } // wnd

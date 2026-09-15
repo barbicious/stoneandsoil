@@ -26,7 +26,7 @@ namespace sos::lvl {
 
         [[nodiscard]] std::array<f32, 30> vertices(Face face, i32 x, i32 y, i32 z) const;
 
-        [[nodiscard]] const Type &type() const noexcept {
+        [[nodiscard]] const Type& type() const noexcept {
             return type_;
         }
 

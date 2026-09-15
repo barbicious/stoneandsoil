@@ -18,7 +18,7 @@ namespace sos {
 
     class PlayerComponent : public ec::Component, public ec::ITickable {
     public:
-        PlayerComponent(const wnd::Window &window, lvl::Level &level);
+        PlayerComponent(const wnd::Window& window, lvl::Level& level);
 
         void tick(f32 delta_time) override;
 
@@ -33,8 +33,8 @@ namespace sos {
         glm::vec3 front_{0.0f, 0.0f, -1.0f};
         glm::vec3 dir_{0.0f, 0.0f, 0.0f};
 
-        const wnd::Window &window_;
-        lvl::Level &level_;
+        const wnd::Window& window_;
+        lvl::Level& level_;
 
         f32 yaw_{-90.0}, pitch_{};
     };

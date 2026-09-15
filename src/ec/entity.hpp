@@ -8,20 +8,20 @@
 #include "i_tickable.hpp"
 
 namespace ec {
-    template<typename C>
+    template <typename C>
     concept ComponentSubclass = std::derived_from<C, Component>;
 
     class Entity : public ITickable, public IBlittable {
     public:
-        template<ComponentSubclass... Components>
+        template <ComponentSubclass... Components>
         explicit Entity(Components... components) {
             (operator+=(std::make_unique<Components>(components)), ...);
         }
 
-        template<ComponentSubclass C>
-        C *getComponent() {
-            for (std::unique_ptr<Component> &component: components_) {
-                if (auto *c{dynamic_cast<C *>(component.get())}) {
+        template <ComponentSubclass C>
+        C* getComponent() {
+            for (std::unique_ptr<Component>& component : components_) {
+                if (auto* c{dynamic_cast<C*>(component.get())}) {
                     return c;
                 }
             }
@@ -37,7 +37,7 @@ namespace ec {
 
     private:
         std::vector<std::unique_ptr<Component> > components_{};
-        std::vector<ITickable *> tickables_{};
-        std::vector<IBlittable *> blittables_{};
+        std::vector<ITickable*> tickables_{};
+        std::vector<IBlittable*> blittables_{};
     };
 } // ec

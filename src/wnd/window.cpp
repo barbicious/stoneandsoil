@@ -6,7 +6,10 @@
 #include <GLFW/glfw3.h>
 
 namespace wnd {
-    Window::Window(const std::string_view &title, i32 width, i32 height) : keyboard_{this}, mouse_{this}, width_{width}, height_{height} {
+    Window::Window(const std::string_view& title, i32 width, i32 height) : keyboard_{this},
+                                                                           mouse_{this},
+                                                                           width_{width},
+                                                                           height_{height} {
         if (!glfwInit()) {
             const char* error_buffer;
             glfwGetError(&error_buffer);

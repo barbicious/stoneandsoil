@@ -5,8 +5,7 @@
 #include "window.hpp"
 
 namespace wnd {
-    Keyboard::Keyboard(const Window *window) : window{window} {
-
+    Keyboard::Keyboard(const Window* window) : window{window} {
     }
 
     void Keyboard::tick() {
@@ -17,10 +16,13 @@ namespace wnd {
     }
 
     bool Keyboard::isKeyDown(i32 key) const {
-        return current_keys_[key] and previous_keys_[key];
+        return current_keys_[key]
+        and previous_keys_[key];
     }
 
     bool Keyboard::isKeyPressed(i32 key) const {
-        return current_keys_[key] and !previous_keys_[key];
+        return current_keys_[key]
+        and
+        !previous_keys_[key];
     }
 } // wnd

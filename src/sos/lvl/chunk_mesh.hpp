@@ -12,9 +12,9 @@ namespace sos::lvl {
 
     class ChunkMesh : public IBlittable {
     public:
-        explicit ChunkMesh(const Chunk *chunk);
+        explicit ChunkMesh(const Chunk* chunk);
 
-        void generateMesh(Level &level);
+        void generateMesh(Level& level);
 
         void blit() const override;
         void uploadData();
@@ -23,8 +23,8 @@ namespace sos::lvl {
         std::vector<f32> vertices_;
         gfx::VertexArray vertex_array_{};
         gfx::VertexBuffer vertex_buffer_{GL_DYNAMIC_DRAW, std::array<f32, 180 * 16 * 16 * 16>{}};
-        const Chunk *chunk_;
+        const Chunk* chunk_;
 
-        void addVertices(const std::array<f32, 30> &vertices);
+        void addVertices(const std::array<f32, 30>& vertices);
     };
 } // sos::lvl
