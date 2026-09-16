@@ -18,24 +18,8 @@ namespace sos::lvl {
         for (i32 i{0}; i < Chunk::WIDTH * Chunk::HEIGHT * Chunk::DEPTH; ++i) {
             i32 y{(i / static_cast<i32>(Chunk::WIDTH)) % static_cast<i32>(Chunk::WIDTH)};
 
-            if (y < Chunk::HEIGHT - 1 and y > 0 and chunk_->layer(y + 1).isCompletelyOpaque() and chunk_->layer(y - 1).isCompletelyOpaque()) {
+            if (isLayerSkippable(y, level)) {
                 continue;
-            }
-
-            if (y == 0 and level.chunkAt(chunk_->relativePosition(0, -1, 0))) {
-                Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, -1, 0))};
-
-                if (chunk->layer(Chunk::HEIGHT - 1).isCompletelyOpaque()) {
-                    continue;
-                }
-            }
-
-            if (y == Chunk::HEIGHT - 1 and level.chunkAt(chunk_->relativePosition(0, 1, 0))) {
-                Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, 1, 0))};
-
-                if (chunk->layer(0).isCompletelyOpaque()) {
-                    continue;
-                }
             }
 
             i32 z{i / (static_cast<i32>(Chunk::WIDTH) * static_cast<i32>(Chunk::WIDTH))};
@@ -105,7 +89,7 @@ namespace sos::lvl {
                 }
             } else {
                 if (const Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, 0, -1))}; chunk != nullptr) {
-                    if (chunk->isTileTransparent(x, y, 0)) {
+                    if (chunk->isTileTransparent(x, y, Chunk::DEPTH - 1)) {
                         addVertices(tile.vertices(Tile::Face::back, world_x, world_y, world_z));
                     }
                 }
@@ -117,7 +101,7 @@ namespace sos::lvl {
                 }
             } else {
                 if (const Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, 0, 1))}; chunk != nullptr) {
-                    if (chunk->isTileTransparent(x, y, Chunk::DEPTH - 1)) {
+                    if (chunk->isTileTransparent(x, y, 0)) {
                         addVertices(tile.vertices(Tile::Face::front, world_x, world_y, world_z));
                     }
                 }
@@ -140,5 +124,64 @@ namespace sos::lvl {
 
     void ChunkMesh::addVertices(const std::array<f32, 30>& vertices) {
         vertices_.insert(vertices_.end(), vertices.begin(), vertices.end());
+    }
+
+    bool ChunkMesh::isLayerSkippable(i32 y, Level& level) const {
+        bool skippable{true};
+
+        if (!(y < Chunk::HEIGHT - 1 and y > 0 and chunk_->layer(y + 1).isCompletelyOpaque() and chunk_->layer(y - 1).
+              isCompletelyOpaque())) {
+            skippable = false;
+        }
+
+        if (y == 0 and level.chunkAt(chunk_->relativePosition(0, -1, 0))) {
+            Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, -1, 0))};
+
+            if (!chunk->layer(Chunk::HEIGHT - 1).isCompletelyOpaque()) {
+                skippable = false;
+            }
+        }
+
+        if (y == Chunk::HEIGHT - 1 and level.chunkAt(chunk_->relativePosition(0, 1, 0))) {
+            Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, 1, 0))};
+
+            if (!chunk->layer(0).isCompletelyOpaque()) {
+                skippable = false;
+            }
+        }
+
+        if (level.chunkAt(chunk_->relativePosition(0, 0, 1))) {
+            Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, 0, 1))};
+
+            if (!chunk->layer(y).isCompletelyOpaque()) {
+                skippable = false;
+            }
+        }
+
+        if (level.chunkAt(chunk_->relativePosition(0, 0, -1))) {
+            Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, 0, -1))};
+
+            if (!chunk->layer(y).isCompletelyOpaque()) {
+                skippable = false;
+            }
+        }
+
+        if (level.chunkAt(chunk_->relativePosition(1, 0, 0))) {
+            Chunk* chunk{level.chunkAt(chunk_->relativePosition(1, 0, 0))};
+
+            if (!chunk->layer(y).isCompletelyOpaque()) {
+                skippable = false;
+            }
+        }
+
+        if (level.chunkAt(chunk_->relativePosition(-1, 0, 0))) {
+            Chunk* chunk{level.chunkAt(chunk_->relativePosition(-1, 0, 0))};
+
+            if (!chunk->layer(y).isCompletelyOpaque()) {
+                skippable = false;
+            }
+        }
+
+        return skippable;
     }
 } // sos::lvl

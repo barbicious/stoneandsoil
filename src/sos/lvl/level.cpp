@@ -1,6 +1,7 @@
 #include "level.hpp"
 
 #include <future>
+#include <iostream>
 #include <ranges>
 #include <thread>
 
@@ -20,7 +21,7 @@ namespace sos::lvl {
 
                     Chunk* chunk{new Chunk{chunk_position, this}};
                     chunks_[chunk_position] = chunk;
-                    mesh_queue_.push_back(chunk->chunkMesh());
+                    mesh_queue_.emplace_back(chunk->chunkMesh());
                 }
             }
         }
@@ -39,28 +40,31 @@ namespace sos::lvl {
     }
 
     void Level::doChunkWork() {
-        if (!mesh_queue_.empty()) {
-            ChunkMesh* mesh{mesh_queue_.back()};
-            mesh_queue_.pop_back();
-            mesh->generateMesh(*this);
-            mesh->uploadData();
-        } else {
-            if (chunk_queue_.empty()) {
+        if (chunk_queue_.empty()) {
+            if (mesh_queue_.empty()) {
                 return;
             }
-            ChunkPosition chunk_position{chunk_queue_.back()};
-            chunk_queue_.pop_back();
 
-            Chunk* chunk{new Chunk{chunk_position, this}};
-            chunks_[chunk_position] = chunk;
-            chunk->chunkMesh()->generateMesh(*this);
-            chunk->chunkMesh()->uploadData();
+            ChunkMesh* chunk_mesh{mesh_queue_.back()};
+            mesh_queue_.pop_back();
+
+            chunk_mesh->generateMesh(*this);
+            chunk_mesh->uploadData();
+
+            return;
         }
+
+        ChunkPosition chunk_position{chunk_queue_.back()};
+        chunk_queue_.pop_back();
+
+        Chunk* chunk{new Chunk{chunk_position, this}};
+        chunks_[chunk_position] = chunk;
+
+        mesh_queue_.emplace_back(chunk->chunkMesh());
     }
 
     void Level::pushMesh(ChunkMesh* chunk_mesh) {
-        chunk_mesh->generateMesh(*this);
-        chunk_mesh->uploadData();
+        mesh_queue_.emplace_back(chunk_mesh);
     }
 
     void Level::crossBoundaries(const ChunkPosition& player_position) {
@@ -68,25 +72,21 @@ namespace sos::lvl {
             chunk->dirty(true);
         }
 
-        constexpr i32 R = RENDER_DISTANCE;
-        constexpr i32 SIZE = 2 * R + 1;
-        constexpr i32 TOTAL = SIZE * SIZE * SIZE;
+        for (i32 z{-RENDER_DISTANCE + player_position.z}; z <= RENDER_DISTANCE + player_position.z; ++z) {
+            for (i32 y{-RENDER_DISTANCE + player_position.y}; y <= RENDER_DISTANCE + player_position.y; ++y) {
+                for (i32 x{-RENDER_DISTANCE + player_position.x}; x <= RENDER_DISTANCE + player_position.x; ++x) {
+                    const ChunkPosition chunk_position{
+                        .x = x,
+                        .y = y,
+                        .z = z
+                    };
 
-        for (i32 i = 0; i < TOTAL; ++i) {
-            i32 x = (i % SIZE) - R + player_position.x;
-            i32 y = ((i / SIZE) % SIZE) - R + player_position.y;
-            i32 z = (i / (SIZE * SIZE)) - R + player_position.z;
-
-            const ChunkPosition chunk_position{
-                .x = x,
-                .y = y,
-                .z = z
-            };
-
-            if (chunks_.contains(chunk_position)) {
-                chunks_[chunk_position]->dirty(false);
-            } else {
-                chunk_queue_.push_back(chunk_position);
+                    if (chunks_.contains(chunk_position)) {
+                        chunks_[chunk_position]->dirty(false);
+                    } else {
+                        chunk_queue_.push_back(chunk_position);
+                    }
+                }
             }
         }
 

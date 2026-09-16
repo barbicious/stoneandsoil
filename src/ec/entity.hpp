@@ -36,7 +36,7 @@ namespace ec {
         void blit() override;
 
     private:
-        std::vector<std::unique_ptr<Component> > components_{};
+        std::vector<std::unique_ptr<Component>> components_{};
         std::vector<ITickable*> tickables_{};
         std::vector<IBlittable*> blittables_{};
     };

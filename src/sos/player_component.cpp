@@ -58,12 +58,11 @@ namespace sos {
             level_.crossBoundaries(new_chunk_position);
         }
 
-        f32 mouse_delta_x{std::get < 0 > (window_.mouse().delta()) * SENSITIVITY}, mouse_delta_y{
-            std::get < 1 > (window_.mouse().delta()) * SENSITIVITY
+        f32 mouse_delta_x{std::get<0>(window_.mouse().delta()) * SENSITIVITY}, mouse_delta_y{
+            std::get<1>(window_.mouse().delta()) * SENSITIVITY
         };
 
-        if (mouse_delta_x != 0 or mouse_delta_y != 0)
-        {
+        if (mouse_delta_x != 0 or mouse_delta_y != 0) {
             yaw_ += mouse_delta_x;
             pitch_ = glm::clamp(pitch_ + mouse_delta_y, -89.0f, 89.0f);
 

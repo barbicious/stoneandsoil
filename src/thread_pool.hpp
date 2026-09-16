@@ -17,9 +17,9 @@ public:
     template <typename Fn, typename... Args>
     auto enqueue(Fn&& fn, Args&&... args) -> std::future<decltype(fn(args...))> {
         auto function{std::bind(std::forward<Fn>(fn), std::forward<Args>(args)...)};
-        auto encapsulated_ptr{std::make_shared<std::packaged_task<decltype(fn(args...))()> >(function)};
+        auto encapsulated_ptr{std::make_shared<std::packaged_task<decltype(fn(args...))()>>(function)};
 
-        std::future<std::result_of_t<Fn(Args...)> > future_object{
+        std::future<std::result_of_t<Fn(Args...)>> future_object{
             encapsulated_ptr->get_future()
         };
 
@@ -43,7 +43,7 @@ private:
     std::vector<std::thread> workers_{};
     std::mutex mutex_{};
     std::condition_variable condition_variable_{};
-    std::queue<std::function<void()> > queue_{};
+    std::queue<std::function<void()>> queue_{};
     bool stop_{};
 
     void worker();

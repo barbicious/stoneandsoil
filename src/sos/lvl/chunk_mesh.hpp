@@ -26,5 +26,6 @@ namespace sos::lvl {
         const Chunk* chunk_;
 
         void addVertices(const std::array<f32, 30>& vertices);
+        bool isLayerSkippable(i32 y, Level& level) const;
     };
 } // sos::lvl
