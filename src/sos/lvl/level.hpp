@@ -6,6 +6,7 @@
 
 #include "chunk_position.hpp"
 #include "i_blittable.hpp"
+#include "../../thread_pool.hpp"
 
 namespace sos::lvl {
     class ChunkMesh;
@@ -43,5 +44,6 @@ namespace sos::lvl {
 
         std::unordered_map<ChunkPosition, Chunk*> chunks_{};
         std::vector<ChunkMesh*> mesh_queue_{};
+        std::vector<ChunkPosition> chunk_queue_{};
     };
 } // sos::lvl

@@ -32,6 +32,8 @@ namespace sos::lvl {
 
         Chunk(ChunkPosition chunk_position, Level* level);
 
+        void generateTerrain();
+
         [[nodiscard]] const ChunkMesh& chunkMesh() const noexcept {
             return chunk_mesh_;
         }

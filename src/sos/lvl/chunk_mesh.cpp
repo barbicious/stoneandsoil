@@ -16,21 +16,30 @@ namespace sos::lvl {
         vertices_.clear();
 
         for (i32 i{0}; i < Chunk::WIDTH * Chunk::HEIGHT * Chunk::DEPTH; ++i) {
-            i32 x{i % static_cast<i32>(Chunk::WIDTH)};
             i32 y{(i / static_cast<i32>(Chunk::WIDTH)) % static_cast<i32>(Chunk::WIDTH)};
-            i32 z{i / (static_cast<i32>(Chunk::WIDTH) * static_cast<i32>(Chunk::WIDTH))};
 
             if (y < Chunk::HEIGHT - 1 and y > 0 and chunk_->layer(y + 1).isCompletelyOpaque() and chunk_->layer(y - 1).isCompletelyOpaque()) {
                 continue;
             }
 
-            if (y == 0 and level.chunkAt(chunk_->relativePosition(0, -1, 1))) {
-                Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, -1, 1))};
+            if (y == 0 and level.chunkAt(chunk_->relativePosition(0, -1, 0))) {
+                Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, -1, 0))};
 
                 if (chunk->layer(Chunk::HEIGHT - 1).isCompletelyOpaque()) {
                     continue;
                 }
             }
+
+            if (y == Chunk::HEIGHT - 1 and level.chunkAt(chunk_->relativePosition(0, 1, 0))) {
+                Chunk* chunk{level.chunkAt(chunk_->relativePosition(0, 1, 0))};
+
+                if (chunk->layer(0).isCompletelyOpaque()) {
+                    continue;
+                }
+            }
+
+            i32 z{i / (static_cast<i32>(Chunk::WIDTH) * static_cast<i32>(Chunk::WIDTH))};
+            i32 x{i % static_cast<i32>(Chunk::WIDTH)};
 
             Tile tile{TileRegistry::get()[chunk_->tileAt(x, y, z)]};
 
