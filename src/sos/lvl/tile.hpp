@@ -11,6 +11,9 @@ namespace sos::lvl {
             air = 0,
             grass,
             stone,
+            water,
+            bark,
+            leaf,
         };
 
         enum struct Face : u8 {
@@ -24,7 +27,7 @@ namespace sos::lvl {
 
         explicit Tile(Type type);
 
-        [[nodiscard]] std::array<f32, 30> vertices(Face face, i32 x, i32 y, i32 z) const;
+        [[nodiscard]] std::array<f32, 36> vertices(Face face, i32 x, i32 y, i32 z) const;
 
         [[nodiscard]] const Type& type() const noexcept {
             return type_;

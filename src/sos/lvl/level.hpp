@@ -3,6 +3,8 @@
 #include <future>
 #include <unordered_map>
 #include <vector>
+#include <glm/vec3.hpp>
+#include <noise/FastNoiseLite.h>
 
 #include "chunk_position.hpp"
 #include "i_blittable.hpp"
@@ -12,12 +14,12 @@ namespace sos::lvl {
     class ChunkMesh;
     class Chunk;
 
-    class Level : public IBlittable {
+    class Level {
     public:
         Level();
-        ~Level() override;
+        ~Level();
 
-        void blit() const override;
+        void blit(const glm::vec3& camera_position) const;
         void doChunkWork();
 
         [[nodiscard]] const Chunk* chunkAt(const ChunkPosition& chunk_position) const {
@@ -39,8 +41,14 @@ namespace sos::lvl {
         void pushMesh(ChunkMesh* chunk_mesh);
         void crossBoundaries(const ChunkPosition& player_position);
 
+        [[nodiscard]] const FastNoiseLite& noise() const noexcept {
+            return noise_;
+        }
+
     private:
-        static constexpr i8 RENDER_DISTANCE{3};
+        static constexpr i8 RENDER_DISTANCE{4};
+
+        FastNoiseLite noise_{};
 
         std::unordered_map<ChunkPosition, Chunk*> chunks_{};
         std::vector<ChunkMesh*> mesh_queue_{};

@@ -23,6 +23,9 @@ i32 main() {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     gfx::Shader shader{
         gfx::Shader::Desc{
             .path = "res/shaders/cube.frag",
@@ -72,7 +75,7 @@ i32 main() {
 
         texture_atlas.bind();
 
-        level.blit();
+        level.blit(player_entity.getComponent<sos::PlayerComponent>()->position());
 
         glDisable(GL_DEPTH_TEST);
 

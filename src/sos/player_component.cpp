@@ -15,7 +15,7 @@ namespace sos {
     }
 
     void PlayerComponent::tick(f32 delta_time) {
-        const float speed{2.5f * delta_time};
+        const float speed{5.0f * delta_time};
 
         constexpr f32 SENSITIVITY{0.1};
 
@@ -92,8 +92,6 @@ namespace sos {
 
                 lvl::Chunk* chunk{level_.chunkAt(chunk_position)};
 
-                //std::cout << chunk_position.x << ", " << chunk_position.y << ", " << chunk_position.z << std::endl;
-
                 usize tile_x{
                     static_cast<usize>(math::remEuclid(static_cast<i32>(std::floor(ray.end().x)),
                                                        static_cast<i32>(lvl::Chunk::WIDTH)))
@@ -110,8 +108,6 @@ namespace sos {
                 if (lvl::TileRegistry::get()[chunk->tileAt(tile_x, tile_y, tile_z)].type() == lvl::Tile::Type::air) {
                     continue;
                 }
-                std::cout << tile_x << ", " << tile_y << ", " << tile_z << std::endl;
-
                 chunk->setTile(tile_x, tile_y, tile_z, static_cast<usize>(lvl::Tile::Type::air));
                 level_.pushMesh(chunk->chunkMesh());
                 break;

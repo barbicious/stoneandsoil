@@ -26,6 +26,10 @@ namespace sos {
             return glm::lookAt(position_, position_ + front_, UP);
         }
 
+        [[nodiscard]] const glm::vec3& position() const noexcept {
+            return position_;
+        }
+
     private:
         static constexpr glm::vec3 UP{0.0f, 1.0f, 0.0f};
 

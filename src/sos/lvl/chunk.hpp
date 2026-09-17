@@ -46,8 +46,8 @@ namespace sos::lvl {
             return chunk_position_;
         }
 
-        [[nodiscard]] bool isTileTransparent(usize x, usize y, usize z) const noexcept {
-            return TileRegistry::get()[tiles_[x + WIDTH * (y + HEIGHT * z)]].type() == Tile::Type::air;
+        [[nodiscard]] bool isTileTransparent(usize x, usize y, usize z, Tile::Type tile_type) const noexcept {
+            return TileRegistry::get()[tiles_[x + WIDTH * (y + HEIGHT * z)]].type() == Tile::Type::air or (tile_type != Tile::Type::water and TileRegistry::get()[tiles_[x + WIDTH * (y + HEIGHT * z)]].type() == Tile::Type::water);
         }
 
         [[nodiscard]] usize tileAt(usize x, usize y, usize z) const noexcept {
@@ -93,5 +93,8 @@ namespace sos::lvl {
         Level* level_;
 
         bool dirty_{false};
+
+        void spawnTree(i32 x, i32 y, i32 z);
+        void unsafeAddBlock(i32 x, i32 y, i32 z, usize tile_idx);
     };
 } // sos::lvl
